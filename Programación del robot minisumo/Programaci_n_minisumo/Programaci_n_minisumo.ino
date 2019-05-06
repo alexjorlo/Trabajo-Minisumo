@@ -1,3 +1,10 @@
+#include <Counter.h>
+#include <interrupt_pins.h>
+
+#include <DcMotor.h>
+
+#include <MCP23008.h>
+
 // Aquí declararemos los pines de cada uno de los componentes
 int Motor1=10;  //conectado al pin 10
 int Motor2=11; //conectado al pin 11
