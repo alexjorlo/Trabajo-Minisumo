@@ -41,7 +41,7 @@ void loop() {
 Serial.println(distancia);
 Serial.println(" cm");
 delay(100);
-if(distancia< 25)
+if(distancia< 5)
 {
   
 }
