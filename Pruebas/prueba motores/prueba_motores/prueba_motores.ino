@@ -1,11 +1,9 @@
-
+#include <MCP23008.h>
 
 #include <Counter.h>
 #include <interrupt_pins.h>
 
 #include <DcMotor.h>
-
-#include <MCP23008.h>
 
 // direcciones I2C de los componentes
 #define DIR_I2C_GESTION   0x27
@@ -40,22 +38,13 @@ int sensor_error[4] = {-4, -2, 2, 4};
 DcMotor motorizquierdo;
 DcMotor motorderecho;
 
-int sensoranalog1=5; //conectado al pin 5
-int sensoranalog2=12;//conectado al pin 12
-int sensordigital1=8;//conectado al pin 8
-int sensordigital2=1;//conectado al pin 1
-
-long distancia;
-long tiempo;
-
-
 void setup() {
   motorizquierdo.begin(6,12);
   motorderecho.begin(4,5);
 
   
 
-  gestionI2C.begin(DIR_I2C_GESTION);//los motores
+  gestionI2C.begin(DIR_I2C_GESTION);
   gestionI2C.pinMode(0x0F);
   gestionI2C.setPullup(0x0F);
 
@@ -63,52 +52,11 @@ void setup() {
   sensoresI2C.pinMode(0xFF);
   sensoresI2C.setPullup(0x00);
   
- pinMode (sensoranalog1, OUTPUT);
- pinMode (sensoranalog2, OUTPUT);
- pinMode (sensordigital1, OUTPUT);
- pinMode (sensordigital2, OUTPUT); //los cuatro sensores
-
 }
 
 void loop() {
-  /**
-  int botonestado1=digitalRead (sensordigital2);//lectura de los pines
-  Serial.println(botonestado1);
-
-  int botonestado2=digitalRead (sensordigital1);//lectura de los pines
-  Serial.println(botonestado2);
-
-  distancia= int(0.017*tiempo);//formula para la distancia
-  Serial.println("Distancia "); //saber la distancia
-Serial.println(distancia);
-Serial.println(" cm");
-delay(100);
-if(distancia< 5)
-{
-  
-}
-else{
-  
-}
-int adelante () { //para ir hacia delante
-digitalWrite (Motor1, HIGH);
-digitalWrite (Motor2, HIGH);
-}
-
-int atras atras(){
-  //digitalWrite (Motor1, LOW);
-//digitalWrite (Motor2, HIGH); Como se haría
-}
-int izquierda(){
-digitalWrite (Motor1, HIGH);
-digitalWrite (Motor2, LOW);
-}
-int derecha(){
-digitalWrite (Motor1, LOW);
-digitalWrite (Motor2, HIGH);
-}
-int detectar(){ */
-switch (estado) {
+   
+    switch (estado) {
     case PARADO:
       // comprobación del botón de cambio de estado
       if (bigButtonPulsed() == true) {
@@ -173,10 +121,6 @@ switch (estado) {
   }
   delay(5);                                       // tiempo de espera hasta la próxima aplicación del control PD
 
-}
-
-
-
 unsigned char estado_anterior_boton = HIGH;
 
 bool bigButtonPulsed() {
@@ -192,10 +136,4 @@ bool bigButtonPulsed() {
     estado_anterior_boton = estado_boton;
     return false;
   }
-  
-}
-
-  
-  
-
 }
