@@ -40,10 +40,12 @@ int sensor_error[4] = {-4, -2, 2, 4};
 DcMotor motorizquierdo;
 DcMotor motorderecho;
 
-int sensoranalog1=5; //conectado al pin 5
-int sensoranalog2=12;//conectado al pin 12
-int sensordigital1=8;//conectado al pin 8
-int sensordigital2=1;//conectado al pin 1
+int sensorldoderecho=A1; //conectado al pin A1 por ser analogico
+int sensorldoldoizquierdo=A2;//conectado al pin A2 por ser analogico
+int sensorarribaderecho=A0;//conectado al pin A0 por ser analogico
+int sensorarribaizquierdo=A3;//conectado al pin A3 por ser analogico
+int sensorblanconegroizquierdo=8;//conectado al pin 8 por ser digital
+int sensorblanconegroderecho=1;//conectado al pin 1 por ser digital
 
 long distancia;
 long tiempo;
