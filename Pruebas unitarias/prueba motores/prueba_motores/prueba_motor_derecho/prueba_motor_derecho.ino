@@ -13,7 +13,7 @@ DcMotor myMotor;
 void setup() {
 
   // configure motor pins
-	myMotor.begin(5, 4);
+	myMotor.begin(6, 12);
 }
 
 void loop() {

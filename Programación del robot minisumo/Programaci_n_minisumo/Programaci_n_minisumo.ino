@@ -16,10 +16,10 @@
 #define CARRERA           1
 
 // pines del arduino
-#define MOTOR_DER_DIR     4
-#define MOTOR_DER_VEL     5
-#define MOTOR_IZQ_DIR     12
-#define MOTOR_IZQ_VEL     6
+#define MOTOR_DER_DIR     12
+#define MOTOR_DER_VEL     6
+#define MOTOR_IZQ_DIR     4
+#define MOTOR_IZQ_VEL     5
 
 // constantes para el control PD y el ajuste de la velocidad de los motores
 #define KP                12
@@ -50,8 +50,8 @@ long tiempo;
 
 
 void setup() {
-  motorizquierdo.begin(6,12);
-  motorderecho.begin(4,5);
+  motorizquierdo.begin(12,6);
+  motorderecho.begin(5,4);
 
   
 
@@ -197,5 +197,3 @@ bool bigButtonPulsed() {
 
   
   
-
-}
