@@ -1,4 +1,4 @@
-int IR = A0; //Entrada digital conectada al sensor infrarrojo
+int IR = 8; //Entrada digital conectada al sensor infrarrojo
 
 void setup()
 {

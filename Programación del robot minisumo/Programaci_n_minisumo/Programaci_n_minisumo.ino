@@ -64,11 +64,11 @@ void setup() {
   sensoresI2C.begin(DIR_I2C_SENSORES);
   sensoresI2C.pinMode(0xFF);
   sensoresI2C.setPullup(0x00);
-  
+/**  
  pinMode (sensoranalog1, OUTPUT);
  pinMode (sensoranalog2, OUTPUT);
  pinMode (sensordigital1, OUTPUT);
- pinMode (sensordigital2, OUTPUT); //los cuatro sensores
+ pinMode (sensordigital2, OUTPUT); //los cuatro sensores*/
 
 }
 
@@ -111,11 +111,14 @@ digitalWrite (Motor2, HIGH);
 }
 int detectar(){ */
 switch (estado) {
+ 
     case PARADO:
       // comprobación del botón de cambio de estado
       if (bigButtonPulsed() == true) {
         gestionI2C.write(4, HIGH);
         estado = CARRERA;                          // cambia al estado de carrera
+        delay(5000);       
+      
       }
       break;
     case CARRERA:
@@ -127,9 +130,12 @@ switch (estado) {
         motorizquierdo.stop();
         break;                                    // se rompe el switch para que el control PD no active los motores de nuevo
       }
+
       
       // lectura de sensores
       char values = sensoresI2C.read();
+
+      Serial.println( analogRead(  ) );
 
       // cálculo del error
       error_anterior = error;                     // se guarda el error anterior para el control derivativo
@@ -166,8 +172,8 @@ switch (estado) {
 
       //actualización de velocidad en motores
       
-  
-
+      //Serial.println( velocidad_izq);
+      //Serial.println( velocidad_der);
       motorizquierdo.move(BACKWARD,velocidad_izq);
       motorderecho.move(velocidad_der);
 
