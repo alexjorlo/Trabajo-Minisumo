@@ -3,11 +3,13 @@ int sensorValue;
 int tiempo;
 int distancia;
 void setup() {
-  Serial.begin(9600);
+  pinMode(sensor,INPUT);
 
 }
 
 void loop() {
+  delay (5000);
+   Serial.println( analogRead(sensor  ) );  /**
    distancia= int(0.017*tiempo);
   sensorValue = analogRead(sensor);
   Serial.println(sensorValue);
@@ -26,4 +28,6 @@ void loop() {
  //   Serial.println("El objetivo esta lejos");
   //}
 
+}
+*/
 }

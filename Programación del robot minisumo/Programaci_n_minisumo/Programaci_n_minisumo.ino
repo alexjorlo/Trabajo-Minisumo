@@ -1,3 +1,5 @@
+#include <DcMotor.h>
+
 
 
 #include <Counter.h>
@@ -13,7 +15,8 @@
 
 // estados para la programación basada en autómatas
 #define PARADO            0
-#define CARRERA           1
+#define BUSCAR            1
+#define ENVESTIR           2
 
 // pines del arduino
 #define MOTOR_DER_DIR     12
@@ -22,9 +25,9 @@
 #define MOTOR_IZQ_VEL     5
 
 // constantes para el control PD y el ajuste de la velocidad de los motores
-#define KP                12
-#define KD                60
-#define VELOCIDAD         210
+/**#define KP                12
+#define KD                60 */
+#define VELOCIDAD         140
 
 // instancia de la placa de control
 MCP23008 gestionI2C;
@@ -64,52 +67,18 @@ void setup() {
   sensoresI2C.begin(DIR_I2C_SENSORES);
   sensoresI2C.pinMode(0xFF);
   sensoresI2C.setPullup(0x00);
-/**  
- pinMode (sensoranalog1, OUTPUT);
- pinMode (sensoranalog2, OUTPUT);
- pinMode (sensordigital1, OUTPUT);
- pinMode (sensordigital2, OUTPUT); //los cuatro sensores*/
+ 
+ pinMode (sensorldoderecho, INPUT);
+ pinMode (sensorldoldoizquierdo, INPUT);
+ pinMode (sensorarribaderecho, INPUT);
+ pinMode (sensorarribaizquierdo, INPUT);//los seis sensores*/
+ pinMode (sensorblanconegroizquierdo, INPUT);
+ pinMode (sensorblanconegroderecho, INPUT);
 
 }
 
 void loop() {
-  /**
-  int botonestado1=digitalRead (sensordigital2);//lectura de los pines
-  Serial.println(botonestado1);
 
-  int botonestado2=digitalRead (sensordigital1);//lectura de los pines
-  Serial.println(botonestado2);
-
-  distancia= int(0.017*tiempo);//formula para la distancia
-  Serial.println("Distancia "); //saber la distancia
-Serial.println(distancia);
-Serial.println(" cm");
-delay(100);
-if(distancia< 5)
-{
-  
-}
-else{
-  
-}
-int adelante () { //para ir hacia delante
-digitalWrite (Motor1, HIGH);
-digitalWrite (Motor2, HIGH);
-}
-
-int atras atras(){
-  //digitalWrite (Motor1, LOW);
-//digitalWrite (Motor2, HIGH); Como se haría
-}
-int izquierda(){
-digitalWrite (Motor1, HIGH);
-digitalWrite (Motor2, LOW);
-}
-int derecha(){
-digitalWrite (Motor1, LOW);
-digitalWrite (Motor2, HIGH);
-}
-int detectar(){ */
 switch (estado) {
  
     case PARADO:
@@ -121,7 +90,8 @@ switch (estado) {
       
       }
       break;
-    case CARRERA:
+    case BUSCAR:
+    if(sensorldoderecho or sensorldoldoizquierdo or sensorarribaderecho or sensorarribaizquierdo<150){
       // comprobación del botón de cambio de estado 
       if (bigButtonPulsed() == true) {
         gestionI2C.write(4, LOW);
@@ -131,11 +101,11 @@ switch (estado) {
         break;                                    // se rompe el switch para que el control PD no active los motores de nuevo
       }
 
-      
+      case ENVESTIR:
       // lectura de sensores
       char values = sensoresI2C.read();
 
-      Serial.println( analogRead(  ) );
+     /*
 
       // cálculo del error
       error_anterior = error;                     // se guarda el error anterior para el control derivativo
@@ -149,31 +119,30 @@ switch (estado) {
       }
       if (num_negros != 0) {                      // sólo si se ha detectado algún negro,
         error /= num_negros;                      // se aplica la corrección al error para el caso de uno o dos sensores detectando negro
-      }
+      } 
 
       // aplicación del control PD
-      int desfase = KP * error + KD* (error - error_anterior);
-
+      int desfase = KP * error + KD* (error - error_anterior);*/
+/**
       // cálculo y limitación de las velocidades
-      int velocidad_der = VELOCIDAD + desfase;    // se calcula la nueva velocidad para el motor derecho y
+      int velocidad_der = VELOCIDAD; /*+ desfase; */   // se calcula la nueva velocidad para el motor derecho y
       if (velocidad_der < 0) {                    // se comprueba que la velocidad esté dentro del rango de 0 a 255.
         velocidad_der = 0;
       }
-      else if (velocidad_der > 255) {
-        velocidad_der = 255;
+      else if (velocidad_der > 140) {
+        velocidad_der =140;
       }
-      int velocidad_izq = VELOCIDAD - desfase;    // se calcula la nueva velocidad para el motor izquierdo y
+      int velocidad_izq = VELOCIDAD;  /*-*desfase; */   // se calcula la nueva velocidad para el motor izquierdo y
       if (velocidad_izq < 0) {                    // se comprueba que la velocidad esté dentro del rango de 0 a 255.
         velocidad_izq = 0;
       }
-      else if (velocidad_izq > 255) {
-        velocidad_izq = 255;
+      else if (velocidad_izq > 140) {
+        velocidad_izq = 140;
       }
 
       //actualización de velocidad en motores
       
-      //Serial.println( velocidad_izq);
-      //Serial.println( velocidad_der);
+     
       motorizquierdo.move(BACKWARD,velocidad_izq);
       motorderecho.move(velocidad_der);
 
@@ -181,6 +150,7 @@ switch (estado) {
   }
   delay(5);                                       // tiempo de espera hasta la próxima aplicación del control PD
 
+}
 }
 
 
