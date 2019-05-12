@@ -16,7 +16,8 @@
 // estados para la programación basada en autómatas
 #define PARADO            0
 #define BUSCAR            1
-#define ENVESTIR           2
+#define ENBESTIRDERECHA   2
+#define ENBESTIRIZQUIERDA 3
 
 // pines del arduino
 #define MOTOR_DER_DIR     12
@@ -32,6 +33,12 @@
 // instancia de la placa de control
 MCP23008 gestionI2C;
 MCP23008 sensoresI2C;
+
+
+int Sizq = 0;
+int Sder = 0;
+int Qder = 0;
+int Qizq = 0;
 
 // variables
 unsigned char estado = PARADO;
@@ -68,20 +75,104 @@ void setup() {
   sensoresI2C.pinMode(0xFF);
   sensoresI2C.setPullup(0x00);
  
- pinMode (sensorldoderecho, INPUT);
- pinMode (sensorldoldoizquierdo, INPUT);
- pinMode (sensorarribaderecho, INPUT);
- pinMode (sensorarribaizquierdo, INPUT);//los seis sensores*/
- pinMode (sensorblanconegroizquierdo, INPUT);
- pinMode (sensorblanconegroderecho, INPUT);
+ pinMode (sensorldoderecho, OUTPUT);
+ pinMode (sensorldoldoizquierdo, OUTPUT);
+ pinMode (sensorarribaderecho, OUTPUT);
+ pinMode (sensorarribaizquierdo, OUTPUT);//los seis sensores*/
+ pinMode (sensorblanconegroizquierdo, OUTPUT);
+ pinMode (sensorblanconegroderecho, OUTPUT);
 
 }
 
 void loop() {
-
 switch (estado) {
+case PARADO:
+parar(); delay(5000);              //cuando lo tengamos parado
+break;
+case BUSCAR:
+sensores();                   //comenzamos a buscar
+adelante();
+break;
+
+case EMBESTIRDERECHA:
+sensores();
+derecha();
+break;
+
+case EMBESTIRIZQUIERDA:
+sensores();
+izquierda();
+break;
+
+
+
+
+
+}
+
+  
+  
+  
+  
+  
+  
+  
+  
+  sensores();
+  if((Sder<=300)&&(Sizq<=300)){adelante();} 
+  if((Sder<=300)&&(Sizq>=300)){izquierda();}
+  if((Sder<=300)&&(Sizq<=300)){derecha();}
+  if((Sder>=300)&&(Sizq>=300)){adelante();}
+  if((Qder>=300)||(Qizq>=300)){atras();delay(200);derecha(); delay(200);}
+
+  void sensores (){
+ Sder = analogRead(sensorldoderecho); 
+ delay(1);   
+ Sizq = analogRead(sensorldoldoizquierdo); 
+ delay(1);   
+ Qder = analogRead(sensorarribaderecho); 
+ delay(1);   
+ Qizq = analogRead(sensorarribaizquierdo); 
+ delay(1);   
+}
+void adelante(){
+digitalWrite(MOTOR_DER_VEL, HIGH);
+digitalWrite(MOTOR_DER_DIR, LOW);
+digitalWrite(MOTOR_IZQ_DIR, HIGH);
+digitalWrite(MOTOR_IZQ_VEL, LOW);
+}
+void atras(){
+digitalWrite(MOTOR_DER_VEL, LOW);
+digitalWrite(MOTOR_DER_DIR, HIGH);
+digitalWrite(MOTOR_IZQ_DIR, LOW);
+digitalWrite(MOTOR_IZQ_VEL, HIGH);
+}
+void parar(){
+digitalWrite(MOTOR_DER_VEL, LOW);
+digitalWrite(MOTOR_DER_DIR, LOW);
+digitalWrite(MOTOR_IZQ_DIR, LOW);
+digitalWrite(MOTOR_IZQ_VEL, LOW);
+}
+
+void derecha(){
+digitalWrite(MOTOR_DER_VEL, LOW);
+digitalWrite(MOTOR_DER_DIR, LOW);
+digitalWrite(MOTOR_IZQ_DIR, HIGH);
+digitalWrite(MOTOR_IZQ_VEL, LOW);
+}
+
+void izquierda(){
+digitalWrite(MOTOR_DER_VEL, HIGH);
+digitalWrite(MOTOR_DER_DIR, LOW);
+digitalWrite(MOTOR_IZQ_DIR, LOW);
+digitalWrite(MOTOR_IZQ_VEL, LOW);
+}
+
+
+
+
  
-    case PARADO:
+   /** case PARADO:
       // comprobación del botón de cambio de estado
       if (bigButtonPulsed() == true) {
         gestionI2C.write(4, HIGH);
@@ -125,14 +216,14 @@ switch (estado) {
       int desfase = KP * error + KD* (error - error_anterior);*/
 /**
       // cálculo y limitación de las velocidades
-      int velocidad_der = VELOCIDAD; /*+ desfase; */   // se calcula la nueva velocidad para el motor derecho y
+      int velocidad_der = VELOCIDAD; /*+ desfase;    // se calcula la nueva velocidad para el motor derecho y
       if (velocidad_der < 0) {                    // se comprueba que la velocidad esté dentro del rango de 0 a 255.
         velocidad_der = 0;
       }
       else if (velocidad_der > 140) {
         velocidad_der =140;
       }
-      int velocidad_izq = VELOCIDAD;  /*-*desfase; */   // se calcula la nueva velocidad para el motor izquierdo y
+      int velocidad_izq = VELOCIDAD;  /*-*desfase;    // se calcula la nueva velocidad para el motor izquierdo y
       if (velocidad_izq < 0) {                    // se comprueba que la velocidad esté dentro del rango de 0 a 255.
         velocidad_izq = 0;
       }
@@ -169,8 +260,9 @@ bool bigButtonPulsed() {
   else {
     estado_anterior_boton = estado_boton;
     return false;
-  }
+  }*/
   
+}
 }
 
   
