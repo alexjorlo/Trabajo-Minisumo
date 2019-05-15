@@ -18,7 +18,7 @@ void setup() {
 
 void loop() {
 
-  myMotor.goForward();    // move motor in forward direction
+  myMotor.goBackward();    // move motor in forward direction
   delay(1000);
   myMotor.stop();         // stop motor
   delay(1000);
