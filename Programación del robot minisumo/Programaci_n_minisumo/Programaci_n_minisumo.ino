@@ -16,6 +16,7 @@
 // estados para la programación basada en autómatas
 #define ARRANCAR   0
 #define PARAR   1
+#define BUSCAR 2
 
 
 
@@ -82,50 +83,79 @@ void loop() {
     case ARRANCAR:
 
 
-      //delay(5000);
+
       digitalWrite(LED_BUILTIN, HIGH);
       gestionI2C.write(4, HIGH);
       motorizquierdo.move( 80);
       motorderecho.move(-175);
-
+      break;
+    case BUSCAR:
 
 
       if ((digitalRead(sensorblanconegroderecho) == HIGH) || (digitalRead(sensorblanconegroizquierdo) == HIGH)) { //Aqui es si con los dos sensores detecta negro que haga los demas casos
-        //motorderecho.move(-100);
-        // motorizquierdo.move(-100);
-        if ((analogRead(sensorarribaderecho) <= 300) and (analogRead(sensorarribaizquierdo) <= 300) and (analogRead(sensorldoderecho) <= 300) and (analogRead(sensorldoizquierdo) <= 300)) {
-          motorderecho.move(175);
-          motorizquierdo.move(150);
-        } 
-        if ((analogRead(sensorarribaderecho) >= 305) and (analogRead(sensorarribaizquierdo) < 305)) {
-          motorderecho.move(-175);
-          motorizquierdo.move(0);
+        Serial.println("aaa");
 
-        } 
-        if ((analogRead(sensorarribaderecho) <= 305) and (analogRead(sensorarribaizquierdo) >= 305)) {
-          motorderecho.move(0);
-          motorizquierdo.move(175);
-        } 
-        if ((analogRead(sensorarribaderecho) >= 305 and analogRead(sensorarribaizquierdo) >= 305)) {
-          motorderecho.move(-175);
-          motorizquierdo.move(100);
+        //motorderecho.goForward();
+        //motorizquierdo.goBackward();
+
+
+        if ((analogRead(sensorarribaderecho) >= 5) || (analogRead(sensorarribaizquierdo) >= 5)  ) {
+          motorderecho.goBackward();
+          motorizquierdo.goForward();
+
+        }
+
+        else if (analogRead(sensorldoderecho) >= 5  ) {
+          motorderecho.goForward();
+          motorizquierdo.goForward();
+
+
+        }
+
+
+        if ( analogRead(sensorldoizquierdo) <= 5 ) {
+          motorderecho.goBackward();
+          motorizquierdo.goBackward();
+
 
         }
 
 
 
-      } 
-      if ( (digitalRead(sensorblanconegroizquierdo) == LOW)) { // si detecta con el sensor de alante que vaya hacia atras
+
+
+      }
+
+      if ( (digitalRead(sensorblanconegroizquierdo) == LOW) and (digitalRead(sensorblanconegroderecho) == HIGH)) { // si detecta con el sensor de alante que vaya hacia atras
         motorderecho.goForward();
         motorizquierdo.goBackward();
-        delay(2000); // Le metemos dos segundos de reloj para que se estabilice en la pista
-        
-        Serial.println("Entra por aqui");
-      } else if ((digitalRead(sensorblanconegroderecho) == LOW)) { // por si se sale a la IZQUIERDA
+
+        delay(500); // Le metemos dos segundos de reloj para que se estabilice en la pista
+
+        motorderecho.goForward();
+        motorizquierdo.goForward();
+        delay(200);
+      }
+      else if ((digitalRead(sensorblanconegroderecho)) == LOW and (digitalRead(sensorblanconegroizquierdo) == HIGH)) { // por si se sale a la IZQUIERDA
         motorderecho.goBackward();
         motorizquierdo.goForward();
-        delay(2000);                  // Le metemos dos segundos de reloj para que se estabilice en la pista
+        delay(500);
+        motorderecho.goBackward();
+        motorizquierdo.goBackward();
+        delay(200);
+      } else if ((digitalRead(sensorblanconegroderecho)) == LOW and (digitalRead(sensorblanconegroizquierdo) == LOW)) {
+        motorderecho.goBackward();
+        motorizquierdo.goForward();
+        delay(500);
+        motorderecho.goBackward();
+        motorizquierdo.goBackward();
+        delay(200);
       }
+
+
+
+      // Le metemos dos segundos de reloj para que se estabilice en la pista
+
 
 
 
@@ -141,9 +171,18 @@ void loop() {
       break;
   }
   if (bigButtonPulsed()) {
+
     if (estado == PARAR) {
+
       estado = ARRANCAR;
+      delay(5000);
+    }
+    if (estado == ARRANCAR) {
+
+      estado = BUSCAR;
+
     } else {
+
       estado = PARAR;
     }
   }
