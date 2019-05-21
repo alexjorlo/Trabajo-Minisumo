@@ -1,4 +1,4 @@
-int sensor=A0;
+int sensor=A1;
 int sensorValue;
 int tiempo;
 int distancia;
